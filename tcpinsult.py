@@ -1,6 +1,14 @@
 import asyncio
 import random
 
+def load_words(filename):
+    with open(filename) as f:
+        return f.read().splitlines()
+
+insults1 = load_words("insults1.txt")
+insults2 = load_words("insults2.txt")
+insults3 = load_words("insults3.txt")
+
 async def handle_echo(reader, writer):
 
     writer.write(b"What is your name?\n")
@@ -19,20 +27,11 @@ async def handle_echo(reader, writer):
 
 loop = asyncio.get_event_loop()
 coro = asyncio.start_server(handle_echo, '0.0.0.0', 8888, loop=loop)
-server = loop.run_until_complete(coro)
-
-def get_relative():
-    return "mother"
+server = loop.run_until_complete(coro) 
 
 def generate_insult(name):
-    return random.choice([
-        f"{name}'s {get_relative()} smells! ", 
-        f"{name} smells! ",
-        f"{name} is a stupid head? ",
-        f"{name} has a stupid head?! ",
-        f"{name} go home! ",
-        f"{name} stop please! "
-    ])
+    c = random.choice
+    return f"{name}, thou {c(insults1)} {c(insults2)} {c(insults3)}! "
 
 def colourise(s):
     colour = random.randint(31,37)
