@@ -9,6 +9,7 @@ insults1 = load_words("insults1.txt")
 insults2 = load_words("insults2.txt")
 insults3 = load_words("insults3.txt")
 
+
 async def handle_echo(reader, writer):
 
     writer.write(b"What is your name?\n")
@@ -24,14 +25,12 @@ async def handle_echo(reader, writer):
             await writer.drain()
     except BrokenPipeError:
         print("Close the client socket")
-
-loop = asyncio.get_event_loop()
-coro = asyncio.start_server(handle_echo, '0.0.0.0', 8888, loop=loop)
-server = loop.run_until_complete(coro) 
+ 
 
 def generate_insult(name):
     c = random.choice
     return f"{name}, thou {c(insults1)} {c(insults2)} {c(insults3)}! "
+
 
 def colourise(s):
     colour = random.randint(31,37)
@@ -40,6 +39,9 @@ def colourise(s):
     return f"\x1b[{colour}m{s}\x1b[0m"
 
 
+loop = asyncio.get_event_loop()
+coro = asyncio.start_server(handle_echo, '0.0.0.0', 8888, loop=loop)
+server = loop.run_until_complete(coro)
 
 # Serve requests until Ctrl+C is pressed
 print('Serving on {}'.format(server.sockets[0].getsockname()))
